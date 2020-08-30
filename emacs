@@ -80,6 +80,15 @@
            (other-window 1)
 ))
 
+(defun my-insert-line-above()
+    (interactive)
+    (progn (beginning-of-line)
+           (indent-according-to-mode)
+           (newline-and-indent)
+           (forward-line -1)
+           (indent-according-to-mode)
+))
+
 (defvar my-syntax-table
     (let ((table (make-syntax-table)))
           (modify-syntax-entry ?_ "w")
@@ -102,7 +111,8 @@
   (c-set-offset 'inline-open '+)
   (c-set-offset 'block-open '+)
   (c-set-offset 'brace-list-open '+)   ; all "opens" should be indented by the c-indent-level
-  (c-set-offset 'case-label '+))       ; indent case labels by c-indent-level, too
+  (c-set-offset 'case-label '+)       ; indent case labels by c-indent-level, too
+)
 
 (add-hook 'c-mode-hook 'my-c-mode-hook)
 (add-hook 'c++-mode-hook 'my-c-mode-hook)
@@ -132,6 +142,7 @@
 (global-set-key (kbd "M-h") 'backward-char)     ;; "M-h" originally binds to 'mark-paragraph 
 (global-set-key (kbd "M-l") 'forward-char)      ;; "M-l" originally binds to 'downcase-word
 (global-set-key (kbd "M-n") 'fast-forward-line)              ;; "M-n" originally binds to nothing
+(global-set-key (kbd "M-RET") 'my-insert-line-above)         ;; "M-RET" originally binds to nothing
 
 (global-set-key (kbd "M-u") 'kill-region)       ;; "M-u" originally binds to 'upcase-word 
 (global-set-key (kbd "M-i") 'select-line)       ;; "M-i" originally binds to 'tab-to-tab-stop
@@ -232,7 +243,7 @@
 ;; mouse-1 left-button
 ;; mouse-3 right-button
 
-(xterm-mouse-mode 1)
+(xterm-mouse-mode 0)
 
 ;; dragging the mouse over a stretch of text also adds the text to the kill ring
 (setq mouse-drag-copy-region t)
