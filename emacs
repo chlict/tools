@@ -80,6 +80,7 @@
            (other-window 1)
 ))
 
+;; insert a line above the current line
 (defun my-insert-line-above()
     (interactive)
     (progn (beginning-of-line)
@@ -87,6 +88,16 @@
            (newline-and-indent)
            (forward-line -1)
            (indent-according-to-mode)
+))
+
+;; insert a line below current line, whereever the cursor in current line is
+;; Unfortunately, no appropriate keys can be bound to this function. 'S-RET' and
+;; 'C-RET' do not work. They work same as 'RET'.
+(defun my-insert-line-below()
+    (interactive)
+    (progn (end-of-line)
+           (indent-according-to-mode)
+           (newline-and-indent)
 ))
 
 (defvar my-syntax-table
