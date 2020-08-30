@@ -118,7 +118,10 @@
   (which-function-mode)
   (local-set-key (kbd "M-e") 'move-end-of-line)
   (lambda () (set-syntax-table my-syntax-table))
-  (c-set-offset 'substatement-open '0) ; brackets should be at same indentation level as the statements they open
+  (c-set-offset 'substatement-open '0)  ; brackets should be at same indentation level as the statements they open
+                                        ; if (cond)
+                                        ; { <-
+                                        ; }
   (c-set-offset 'inline-open '+)
   (c-set-offset 'block-open '+)
   (c-set-offset 'brace-list-open '+)   ; all "opens" should be indented by the c-indent-level
