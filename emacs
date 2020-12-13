@@ -151,6 +151,9 @@
 
 (setq linum-format "%d ") 
 
+(require 'clang-format)
+(global-set-key [C-M-tab] 'clang-format-region)
+
 (global-set-key (kbd "M-j") 'next-line)
 (global-set-key (kbd "M-k") 'previous-line)     ;; "M-k" originally binds to 'kill-sentence
 (global-set-key (kbd "M-h") 'backward-char)     ;; "M-h" originally binds to 'mark-paragraph 
