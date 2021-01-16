@@ -11,11 +11,11 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-(add-to-list 'load-path "/home/chenlong/.emacs-lisp/")
+(add-to-list 'load-path "~/.emacs-lisp/")
 
 ;;Auto complete
 (require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "/home/chenlong/.emacs-lisp/ac-dict")
+(add-to-list 'ac-dictionary-directories "~/.emacs-lisp/ac-dict")
 (ac-config-default)
 
 (require 'highlight-symbol)
@@ -23,6 +23,9 @@
 (global-set-key [(control f3)] 'highlight-symbol-next)
 (global-set-key [(shift f3)] 'highlight-symbol-prev)
 ;; (global-set-key [(meta f3)] 'highlight-symbol-query-replace)
+
+(global-set-key (kbd "M-s") 'isearch-forward) ; "M-s" originally binds to "Prefix Command"
+(define-key isearch-mode-map "\M-s" 'isearch-repeat-forward) ; remaps the binding for isearch-repeat-forward
 
 ;; enable visual feedback on selections
 (setq transient-mark-mode t)
