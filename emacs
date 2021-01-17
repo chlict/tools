@@ -36,6 +36,11 @@
 (global-set-key [f11] 'list-and-other-window)
 (global-set-key [f12] 'grep)
 
+;; Display line numbers if emacs version > 26.0.5
+;; To toggle line numbers on and off for a specific buffer: M-x display-line-numbers-mode
+(when (version<= "26.0.50" emacs-version )
+  (global-display-line-numbers-mode))
+
 ;; Auto complete config (still useful?)
 (use-package auto-complete-config
   :config
@@ -48,12 +53,14 @@
          ("C-<f3>" . highlight-symbol-next)
          ("C-<f3>" . highlight-symbol-prev)))
 
+;; (require 'clang-format)
+;; (global-set-key [C-M-tab] 'clang-format-region)
+
 ;; use y/n to represent yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; show column number and line number at status bar
 (setq column-number-mode t)
-(setq line-number-mode t)
 
 ;; auto complement function and variable names in minibuffer
 (icomplete-mode 1)
@@ -122,12 +129,12 @@
 ;; insert a line below current line, whereever the cursor in current line is
 ;; Unfortunately, no appropriate keys can be bound to this function. 'S-RET' and
 ;; 'C-RET' do not work. They work same as 'RET'.
-(defun my-insert-line-below()
-    (interactive)
-    (progn (end-of-line)
-           (indent-according-to-mode)
-           (newline-and-indent)
-))
+;; (defun my-insert-line-below()
+;;     (interactive)
+;;     (progn (end-of-line)
+;;            (indent-according-to-mode)
+;;            (newline-and-indent)
+;; ))
 
 ;; (defvar my-syntax-table
 ;;     (let ((table (make-syntax-table)))
@@ -179,9 +186,6 @@
 ;; (add-hook 'java-mode-hook 'my-java-mode-set)
 
 ;; (setq linum-format "%d ") 
-
-;; (require 'clang-format)
-;; (global-set-key [C-M-tab] 'clang-format-region)
 
 ;; ;;(setq sentence-end "[^.].[.?!]+\\([]\"')}]*\\|<[^>]+>\\)\\($\\| $\\|\t\\| \\)[ \t\n]*")
 
