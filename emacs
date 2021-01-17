@@ -41,11 +41,14 @@
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
 
+;; Disable line-numbers minor mode for eshell
+(add-hook 'eshell-mode-hook (lambda (&rest _) (display-line-numbers-mode -1)))
+
 ;; Auto complete config (still useful?)
-(use-package auto-complete-config
-  :config
-  (add-to-list 'ac-dictionary-directories "~/.emacs-lisp/ac-dict")
-  (ac-config-default))
+;; (use-package auto-complete-config
+;;   :config
+;;   (add-to-list 'ac-dictionary-directories "~/.emacs-lisp/ac-dict")
+;;   (ac-config-default))
 
 ;; Highlight symbols
 (use-package highlight-symbol
