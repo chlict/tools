@@ -9,6 +9,7 @@
   (require 'use-package))
 
 ;; Customized key bindings
+(global-set-key (kbd "M-O") 'find-file)         ;; "M-O" originally binds to 'Prefix Command'
 (global-set-key (kbd "M-j") 'next-line)
 (global-set-key (kbd "M-k") 'previous-line)     ;; "M-k" originally binds to 'kill-sentence
 (global-set-key (kbd "M-h") 'backward-char)     ;; "M-h" originally binds to 'mark-paragraph
