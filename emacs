@@ -9,12 +9,13 @@
   (require 'use-package))
 
 ;; Customized key bindings
-(global-set-key (kbd "M-F") 'find-file)         ;; "M-F" originally binds to 'select forward'
 (global-set-key (kbd "M-j") 'next-line)
 (global-set-key (kbd "M-k") 'previous-line)     ;; "M-k" originally binds to 'kill-sentence
 (global-set-key (kbd "M-h") 'backward-char)     ;; "M-h" originally binds to 'mark-paragraph
 (global-set-key (kbd "M-l") 'forward-char)      ;; "M-l" originally binds to 'downcase-word
 (global-set-key (kbd "M-n") 'fast-forward-line)              ;; "M-n" originally binds to nothing
+(global-set-key (kbd "M-F") 'find-file)         ;; "M-F" originally binds to 'select forward'
+(global-set-key (kbd "M-S") 'save-buffer)       ;; "M-S" originally binds to nothing
 (global-set-key (kbd "M-RET") 'my-insert-line-above)         ;; "M-RET" originally binds to nothing
 (global-set-key (kbd "M-u") 'kill-region)       ;; "M-u" originally binds to 'upcase-word
 (global-set-key (kbd "M-i") 'select-line)       ;; "M-i" originally binds to 'tab-to-tab-stop
