@@ -75,7 +75,7 @@
 ;; (setq transient-mark-mode t)
 
 ;; ;; don't show menu bar
-;; (menu-bar-mode nil)
+;; (menu-bar-mode -1)
 
 ;; ;; default to unified diffs
 ;; (setq diff-switches "-u")
