@@ -8,6 +8,11 @@
   (add-to-list 'load-path "~/.emacs-lisp/use-package-2.4.1")
   (require 'use-package))
 
+(add-to-list 'load-path "~/.emacs-lisp/auto-complete-1.5.1")
+(add-to-list 'load-path "~/.emacs-lisp/popup-el-0.5.8")
+(require 'auto-complete-config)
+(ac-config-default)
+
 ;; Customized key bindings
 (global-set-key (kbd "M-j") 'next-line)
 (global-set-key (kbd "M-k") 'previous-line)     ;; "M-k" originally binds to 'kill-sentence
