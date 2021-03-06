@@ -60,14 +60,21 @@
          ("C-<f3>" . highlight-symbol-next)
          ("C-<f3>" . highlight-symbol-prev)))
 
-(use-package clang-format
-  :bind ([C-M-tab] . clang-format-region)
-)
-
 ;; ibuffer
 (use-package ibuffer
   :bind("C-x C-b" . ibuffer)
 )
+
+;; rect-mark.el
+(use-package rect-mark
+  :bind("%" . match-paren)
+)
+(defun match-paren (arg)
+     "Go to the matching paren if on a paren; otherwise insert %."
+     (interactive "p")
+     (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+	   ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+	   (t (self-insert-command (or arg 1)))))
 
 ;; use y/n to represent yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -84,25 +91,6 @@
 ;; check parentheses matching
 (show-paren-mode t)
 (setq show-paren-style 'parentheses)
-
-;; ;; enable visual feedback on selections
-;; (setq transient-mark-mode t)
-
-;; ;; don't show menu bar
-;; (menu-bar-mode -1)
-
-;; ;; default to unified diffs
-;; (setq diff-switches "-u")
-
-;; ;; auto newline at column 80
-;; (setq default-fill-column 80)
-
-;; ;; recent file list
-;; (recentf-mode 1)
-
-;; ;; use ansi color in shell
-;; (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-;; (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 (defun select-line ()
     "select whole line"
@@ -134,46 +122,39 @@
            (indent-according-to-mode)
 ))
 
-;; insert a line below current line, whereever the cursor in current line is
-;; Unfortunately, no appropriate keys can be bound to this function. 'S-RET' and
-;; 'C-RET' do not work. They work same as 'RET'.
-;; (defun my-insert-line-below()
-;;     (interactive)
-;;     (progn (end-of-line)
-;;            (indent-according-to-mode)
-;;            (newline-and-indent)
-;; ))
+(setq sentence-end "[^.].[.?!]+\\([]\"')}]*\\|<[^>]+>\\)\\($\\| $\\|\t\\| \\)[ \t\n]*")
+
+(use-package clang-format
+  :bind ("M-'" . clang-format-region)
+)
+
+;; indentation configuration for C/C++
+(setq-default c-indent-tabs-mode t     ; Pressing TAB should cause indentation
+              c-basic-offset 2         ; A basic indent level
+              ;; c-indent-level 2      ; A TAB is equivilent to # spaces ;; same effect with above
+              c-argdecl-indent 0       ; Do not indent argument decl's extra
+              c-tab-always-indent t
+              backward-delete-function nil) ; DO NOT expand tabs when deleting
+(c-set-offset 'inline-open '+)
+(c-set-offset 'block-open '+)
+(c-set-offset 'brace-list-open '+)     ; all "opens" should be indented by the c-indent-level
+(c-set-offset 'case-label '+)          ; indent case labels by c-indent-level, too
+(c-set-offset 'substatement-open '0)   ; brackets should be at same indentation level as the statements they open
+                                       ; if (cond)
+                                       ; { <-
+                                       ; }
+
+(setq-default indent-tabs-mode nil)
 
 (defvar my-syntax-table
     (let ((table (make-syntax-table)))
           (modify-syntax-entry ?_ "w")
      table))
 
-(setq-default c-indent-tabs-mode t     ; Pressing TAB should cause indentation
-              ;; c-indent-level 4         ; A TAB is equivilent to four spaces
-              c-argdecl-indent 0       ; Do not indent argument decl's extra
-              c-tab-always-indent t
-              backward-delete-function nil) ; DO NOT expand tabs when deleting
-(c-add-style "my-c-style" '((c-continued-statement-offset 4))) ; If a statement continues on the next line, indent the continuation by 4
-
-(setq-default indent-tabs-mode nil)
-;; (setq-default tab-width 4)
-(setq indent-line-function 'insert-tab)
-
 (defun my-c-mode-hook ()
-  (c-set-style "my-c-style")
-  ;; (linum-mode 1)
   (which-function-mode)
   (local-set-key (kbd "M-e") 'move-end-of-line)
   (lambda () (set-syntax-table my-syntax-table))
-  (c-set-offset 'substatement-open '0)  ; brackets should be at same indentation level as the statements they open
-                                        ; if (cond)
-                                        ; { <-
-                                        ; }
-  (c-set-offset 'inline-open '+)
-  (c-set-offset 'block-open '+)
-  (c-set-offset 'brace-list-open '+)   ; all "opens" should be indented by the c-indent-level
-  (c-set-offset 'case-label '+)       ; indent case labels by c-indent-level, too
 )
 
 (add-hook 'c-mode-hook 'my-c-mode-hook)
@@ -185,20 +166,17 @@
  )
 (add-hook 'eshell-mode-hook 'my-eshell-mode-set)
 
-;; (defun my-text-mode-set ()
-;;   (linum-mode 1)
-;;   (lambda () (set-syntax-table my-syntax-table))
-;; )
-;; (add-hook 'text-mode-hook 'my-text-mode-set)
+;; Timing utilities
+;; report init time
+(add-to-list 'after-init-hook
+  (lambda ()
+    (message (concat "emacs (" (number-to-string (emacs-pid)) ") started in " (emacs-init-time)))))
 
-;; (defun my-java-mode-set ()
-;;   (linum-mode 1)
-;; )
-;; (add-hook 'java-mode-hook 'my-java-mode-set)
-
-;; (setq linum-format "%d ") 
-
-(setq sentence-end "[^.].[.?!]+\\([]\"')}]*\\|<[^>]+>\\)\\($\\| $\\|\t\\| \\)[ \t\n]*")
+;; usage: (with-timer "command name" (command))
+(defmacro with-timer (name &rest body)
+  `(let ((time (current-time)))
+     ,@body
+     (message "%s: %.06f" ,name (float-time (time-since time)))))
 
 ;;Cscope
 ;; C-c s s         Find symbol.
@@ -226,29 +204,6 @@
 ;; (require 'xcscope)
 ;; ;(setq cscope-do-not-update-database-t)
 
-;; ;; newline and indent when hit <return>
-;; (global-set-key "\C-m" 'newline-and-indent)
-;; (global-set-key (kbd "C-<return>") 'newline)
-
-;; ;; switch between recent buffers
-;;  ;; (require 'swbuff)
-;;  ;; (global-set-key (kbd "M--") 'swbuff-switch-to-previous-buffer)
-;; ;;;; (setq swbuff-exclude-buffer-regexps
-;; ;;;;             '("^ " "\*.*\*"))
-;;  ;; (setq swbuff-status-window-layout 'scroll)
-;;  ;; (setq swbuff-clear-delay 2)
-;;  ;; (setq swbuff-separator "|")
-;;  ;; (setq swbuff-window-min-text-height 1)
-
-;;rect-mark.el
-(require 'rect-mark)
-(global-set-key "%" 'match-paren)
-(defun match-paren (arg)
-     "Go to the matching paren if on a paren; otherwise insert %."
-     (interactive "p")
-     (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
-	   ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
-	   (t (self-insert-command (or arg 1)))))
 
 ;; ;;etags * / etags -a subdir/*
 ;; ;;`M-.’ (‘find-tag’) – find a tag, that is, use the Tags file to look up a definition. 
@@ -286,15 +241,62 @@
 ;; (global-set-key (kbd "<S-down-mouse-1>") 'mouse-set-point)
 ;; (global-set-key (kbd "<S-mouse-1>") 'highlight-symbol)
 
-;; Timing utilities
-;; report init time
-(add-to-list 'after-init-hook
-  (lambda ()
-    (message (concat "emacs (" (number-to-string (emacs-pid)) ") started in " (emacs-init-time)))))
+;; insert a line below current line, whereever the cursor in current line is
+;; Unfortunately, no appropriate keys can be bound to this function. 'S-RET' and
+;; 'C-RET' do not work. They work same as 'RET'.
+;; (defun my-insert-line-below()
+;;     (interactive)
+;;     (progn (end-of-line)
+;;            (indent-according-to-mode)
+;;            (newline-and-indent)
+;; ))
 
-;; usage: (with-timer "command name" (command))
-(defmacro with-timer (name &rest body)
-  `(let ((time (current-time)))
-     ,@body
-     (message "%s: %.06f" ,name (float-time (time-since time)))))
+;; ;; enable visual feedback on selections
+;; (setq transient-mark-mode t)
 
+;; ;; don't show menu bar
+;; (menu-bar-mode -1)
+
+;; ;; default to unified diffs
+;; (setq diff-switches "-u")
+
+;; ;; auto newline at column 80
+;; (setq default-fill-column 80)
+
+;; ;; recent file list
+;; (recentf-mode 1)
+
+;; ;; use ansi color in shell
+;; (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+;; (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+;; (defun my-text-mode-set ()
+;;   (linum-mode 1)
+;;   (lambda () (set-syntax-table my-syntax-table))
+;; )
+;; (add-hook 'text-mode-hook 'my-text-mode-set)
+
+;; (defun my-java-mode-set ()
+;;   (linum-mode 1)
+;; )
+;; (add-hook 'java-mode-hook 'my-java-mode-set)
+
+;; (setq linum-format "%d ") 
+
+;; ;; newline and indent when hit <return>
+;; (global-set-key "\C-m" 'newline-and-indent)
+;; (global-set-key (kbd "C-<return>") 'newline)
+
+;; switch between recent buffers
+;; (require 'swbuff)
+;; (global-set-key (kbd "M--") 'swbuff-switch-to-previous-buffer)
+;; (setq swbuff-exclude-buffer-regexps
+;;             '("^ " "\*.*\*"))
+ ;; (setq swbuff-status-window-layout 'scroll)
+ ;; (setq swbuff-clear-delay 2)
+ ;; (setq swbuff-separator "|")
+ ;; (setq swbuff-window-min-text-height 1)
+
+
+;; (setq-default tab-width 2)       ; set in c-basic-offset
+;; (setq indent-line-function 'insert-tab) ; don't know its functionality
