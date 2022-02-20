@@ -1,5 +1,14 @@
 ;; .emacs
 
+(require 'package)
+(setq package-enable-at-startup nil)
+(setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+                         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
+
+(package-initialize)
+(add-hook 'after-init-hook'global-company-mode)
+;; (add-hook 'after-init-hook'global-flycheck-mode)
+
 ;; Emacs Load Path
 (add-to-list 'load-path "~/.emacs-lisp/")
 
@@ -36,7 +45,7 @@
 (global-set-key (kbd "M-3") 'split-window-horizontally)
 (global-set-key (kbd "M-9") 'eshell)
 (global-set-key (kbd "M--") 'undo)
-(global-set-key (kbd "M-s") 'isearch-forward)   ;; "M-s" originally binds to "Prefix Command"
+(global-set-key (kbd "M-s") 'avy-goto-char)   ;; "M-s" originally binds to "Prefix Command"
 (define-key isearch-mode-map "\M-s" 'isearch-repeat-forward) ; remaps the binding for isearch-repeat-forward
 
 (global-set-key [f5] 'revert-buffer)
@@ -300,3 +309,15 @@
 
 ;; (setq-default tab-width 2)       ; set in c-basic-offset
 ;; (setq indent-line-function 'insert-tab) ; don't know its functionality
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages '(avy flycheck company)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
