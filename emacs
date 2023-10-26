@@ -1,9 +1,15 @@
 ;; .emacs
 
-(require 'package)
-(setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
-(package-initialize)
+;; package-list-packages
+;; package-refresh-contents
+; package-install
+(when (>= emacs-major-version 24)
+  (progn
+    ;; load emacs 24's package system.
+    (require 'package)
+    ;; Add MELPA repository.
+    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
+  (when (< emacs-major-version 27) (package-initialize)))
 
 ;; Emacs Load Path
 (add-to-list 'load-path "~/.emacs-lisp/")
