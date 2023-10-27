@@ -2,7 +2,7 @@
 
 ;; package-list-packages
 ;; package-refresh-contents
-; package-install
+;; package-install
 (when (>= emacs-major-version 24)
   (progn
     ;; load emacs 24's package system.
@@ -48,7 +48,7 @@
 (global-set-key (kbd "M-h") 'backward-char)     ;; "M-h" originally binds to 'mark-paragraph
 (global-set-key (kbd "M-l") 'forward-char)      ;; "M-l" originally binds to 'downcase-word
 (global-set-key (kbd "M-n") 'fast-forward-line)              ;; "M-n" originally binds to nothing
-(global-set-key (kbd "M-F") 'find-file)         ;; "M-F" originally binds to 'select forward'
+(global-set-key (kbd "M-F") 'projectile-find-file)         ;; "M-F" originally binds to 'select forward'
 (global-set-key (kbd "M-S") 'save-buffer)       ;; "M-S" originally binds to nothing
 (global-set-key (kbd "M-RET") 'my-insert-line-above)         ;; "M-RET" originally binds to nothing
 (global-set-key (kbd "M-u") 'kill-region)       ;; "M-u" originally binds to 'upcase-word
@@ -64,11 +64,12 @@
 
 (global-set-key [f5] 'revert-buffer)
 (global-set-key [f6] 'imenu-list-smart-toggle)
-(global-set-key [f7] 'cscope-find-this-symbol)
-(global-set-key [f8] 'cscope-find-functions-calling-this-function)
-(global-set-key [f9] 'cscope-find-global-definition-no-prompting)
 (global-set-key [f11] 'list-and-other-window)
 (global-set-key [f12] 'grep)
+
+(projectile-mode +1)
+;; Recommended keymap prefix on Windows/Linux
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
 ;; Display line numbers if emacs version > 26.0.5
 ;; To toggle line numbers on and off for a specific buffer: M-x display-line-numbers-mode
@@ -176,8 +177,10 @@
           (modify-syntax-entry ?_ "w")
      table))
 
+
 (defun my-c-mode-hook ()
   (which-function-mode)
+  (imenu-list-minor-mode)
   (local-set-key (kbd "M-e") 'move-end-of-line)
   (lambda () (set-syntax-table my-syntax-table))
 )
@@ -211,7 +214,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(which-key yasnippet lsp-mode company-irony irony imenu-list flycheck neotree vterm company avy)))
+   '(projectile paradox irony-eldoc which-key yasnippet lsp-mode company-irony irony imenu-list flycheck neotree vterm company avy)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
